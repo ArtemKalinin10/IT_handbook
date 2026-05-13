@@ -1,0 +1,113 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #0f172a, #1e1b4b);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.form {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    width: 320px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    outline: none;
+    transition: 0.2s;
+}
+
+.input:focus {
+    border-color: #6366f1;
+    box-shadow: 0 0 0 2px rgba(99,102,241,0.2);
+}
+
+.btn {
+    padding: 10px;
+    background: #6366f1;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.btn:hover {
+    background: #4f46e5;
+}
+
+.errors {
+    color: red;
+    font-size: 12px;
+}
+
+
+.title {
+    margin: 0 0 8px 0;
+    text-align: center;
+    color: #111827;
+    font-size: 28px;
+}
+
+.subtitle {
+    margin: 0 0 20px 0;
+    text-align: center;
+    color: #6b7280;
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.field label {
+    font-size: 14px;
+    color: #374151;
+}
+
+.bottom-text {
+    text-align: center;
+    font-size: 14px;
+    color: #6b7280;
+}
+
+.bottom-text a {
+    color: #6366f1;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.bottom-text a:hover {
+    text-decoration: underline;
+}
+
+.errorlist {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    color: red;
+    font-size: 12px;
+}

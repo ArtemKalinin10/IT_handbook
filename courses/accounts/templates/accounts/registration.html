@@ -1,0 +1,30 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'accounts/css/style.css' %}"/>
+    <title>Онлайн-школа</title>
+</head>
+<body>
+<div class="container">
+    <form method="post" class="form">
+        {% csrf_token %}
+
+        {{ form.username }}
+        {{ form.email }}
+        {{ form.password1 }}
+        {{ form.password2 }}
+
+        <button type="submit" class="btn">
+            Зарегистрироваться
+        </button>
+
+        <div class="errors">
+            {{ form.errors }}
+        </div>
+    </form>
+</div>
+</body>
+</html>

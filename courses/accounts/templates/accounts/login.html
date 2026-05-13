@@ -1,0 +1,72 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="{% static 'accounts/css/style.css' %}">
+
+    <title>Вход</title>
+</head>
+<body>
+
+<div class="container">
+
+    <form method="post" class="form">
+
+        {% csrf_token %}
+
+        <h1 class="title">
+            Вход
+        </h1>
+
+        <p class="subtitle">
+            Войдите в свой аккаунт
+        </p>
+
+        <div class="field">
+            <label>
+                Username или Email
+            </label>
+
+            {{ form.username_email }}
+
+            {{ form.username_email.errors }}
+        </div>
+
+        <div class="field">
+            <label>
+                Пароль
+            </label>
+
+            {{ form.password }}
+
+            {{ form.password.errors }}
+        </div>
+
+        {% if form.non_field_errors %}
+            <div class="errors">
+                {% for error in form.non_field_errors %}
+                    <p>{{ error }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <button type="submit" class="btn">
+            Войти
+        </button>
+
+        <div class="bottom-text">
+            Нет аккаунта?
+            <a href="{% url 'reg' %}">
+                Зарегистрироваться
+            </a>
+        </div>
+
+    </form>
+
+</div>
+
+</body>
+</html>
