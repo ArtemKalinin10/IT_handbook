@@ -1,0 +1,96 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Онлайн-школа</title>
+  <link rel="stylesheet" href="{% static 'main/css/style.css' %}">
+</head>
+<body>
+
+<header class="header">
+
+  <div class="logo">
+    📘 LearnSpace
+  </div>
+
+  <div class="auth">
+
+    {% if request.user.is_authenticated %}
+
+      <span class="username">
+        {{ request.user.username }}
+      </span>
+
+      <a href="{% url 'logout' %}" class="btn danger">
+        Выйти
+      </a>
+
+    {% else %}
+
+      <a href="{% url 'login' %}" class="btn">
+        Вход
+      </a>
+
+      <a href="{% url 'reg' %}" class="btn primary">
+        Регистрация
+      </a>
+
+    {% endif %}
+
+  </div>
+
+</header>
+
+<main class="container">
+
+  <section class="hero">
+
+    <h1>Выбери направление обучения</h1>
+
+    <div class="categories">
+
+      {% for course in all_courses %}
+
+        <div class="card">
+
+          <div>
+
+            <h2 class="card-title">
+              {{ course.title }}
+            </h2>
+
+            <p class="card-desc">
+              {{ course.description }}
+            </p>
+
+          </div>
+
+          {% if course.slug %}
+
+            <a href="{% url 'education:course_detail' course.slug %}" class="card-btn">
+              Перейти к обучению →
+            </a>
+
+          {% else %}
+
+            <div class="card-btn disabled">
+              Скоро доступно
+            </div>
+
+          {% endif %}
+
+        </div>
+
+      {% endfor %}
+
+    </div>
+
+  </section>
+
+</main>
+
+</body>
+</html>

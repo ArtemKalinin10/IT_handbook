@@ -1,0 +1,117 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Задача</title>
+
+  <link rel="stylesheet" href="{% static 'education/css/task.css' %}">
+</head>
+<body>
+
+<!-- TOGGLE SIDEBAR -->
+<input type="checkbox" id="sidebar-toggle" hidden>
+
+<div class="task-layout">
+
+  <!-- SIDEBAR (SLIDE MENU) -->
+  <aside class="sidebar">
+
+    <div class="sidebar-header">
+      <label for="sidebar-toggle" class="close-btn">✕</label>
+      <h3>Задачи</h3>
+    </div>
+
+    <ul class="task-list">
+      <li class="active">A. Таблица умножения</li>
+      <li>B. Сумма чисел</li>
+      <li>C. Чётность</li>
+      <li>D. Максимум</li>
+      <li>E. Строки</li>
+    </ul>
+
+  </aside>
+
+  <!-- LEFT PANEL -->
+  <aside class="task-left">
+
+    <label for="sidebar-toggle" class="open-btn">☰ Задачи</label>
+
+    <div class="task-title">
+      A. Таблица умножения
+    </div>
+
+    <div class="task-meta">
+      <div>⏱ 1 сек</div>
+      <div>💾 64 MB</div>
+    </div>
+
+    <div class="task-section">
+      <h3>Ввод</h3>
+      <p>Стандартный ввод или input.txt</p>
+    </div>
+
+    <div class="task-section">
+      <h3>Вывод</h3>
+      <p>Стандартный вывод или output.txt</p>
+    </div>
+
+    <div class="task-description">
+      <p>
+        Напишите программу, которая по введённому числу n выводит таблицу умножения n × n.
+      </p>
+    </div>
+
+    <div class="task-example">
+      <h3>Пример</h3>
+
+      <div class="example-box">
+        <div>
+          <b>Ввод</b>
+          <pre>3</pre>
+        </div>
+
+        <div>
+          <b>Вывод</b>
+<pre>1 2 3
+2 4 6
+3 6 9</pre>
+        </div>
+      </div>
+    </div>
+
+  </aside>
+
+  <!-- RIGHT PANEL -->
+  <main class="task-right">
+
+    <div class="top-bar">
+
+      <div class="tabs">
+        <div class="tab active">Код</div>
+        <div class="tab">Описание</div>
+        <div class="tab">Решения</div>
+      </div>
+
+      <div class="actions">
+        <div class="counter">Осталось попыток: 996</div>
+        <button class="send-btn">Отправить</button>
+      </div>
+
+    </div>
+
+    <div class="editor">
+      <div class="editor-header">
+        <span>(make) python-handbook</span>
+      </div>
+
+      <textarea class="code-area" placeholder="Напишите решение..."></textarea>
+    </div>
+
+  </main>
+
+</div>
+
+</body>
+</html>
