@@ -87,10 +87,21 @@ def lesson_detail(request, course_slug, lesson_slug):
 
 def task_detail(request, course_slug, lesson_slug, task_slug):
     task = get_object_or_404(
-        Task.objects,
+        Task.objects
+        .select_related(
+            "lesson",
+            "lesson__module",
+            "lesson__module__course",
+        )
+        .prefetch_related(
+            "lesson__tasks",
+            "blocks",
+            "blocks__hint",
+            "blocks__hint__blocks"
+        ),
         slug=task_slug,
         lesson__slug=lesson_slug,
-        lesson__module__course__slug=course_slug
+        lesson__module__course__slug=course_slug,
     )
-    
+
     return render(request, "education/task.html", {"task": task})

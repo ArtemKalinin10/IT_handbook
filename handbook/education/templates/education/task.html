@@ -10,108 +10,140 @@
 </head>
 <body>
 
-<!-- TOGGLE SIDEBAR -->
-<input type="checkbox" id="sidebar-toggle" hidden>
+  <!-- TOGGLE SIDEBAR -->
+  <input type="checkbox" id="sidebar-toggle" hidden>
 
-<div class="task-layout">
+  <div class="task-layout">
 
-  <!-- SIDEBAR (SLIDE MENU) -->
-  <aside class="sidebar">
+    <!-- SIDEBAR (SLIDE MENU) -->
+    <aside class="sidebar">
 
-    <div class="sidebar-header">
-      <label for="sidebar-toggle" class="close-btn">✕</label>
-      <h3>Задачи</h3>
-    </div>
+      <div class="sidebar-header">
+        <label for="sidebar-toggle" class="close-btn">✕</label>
+        <h3>Задачи</h3>
+      </div>
 
-    <ul class="task-list">
-      <li class="active">A. Таблица умножения</li>
-      <li>B. Сумма чисел</li>
-      <li>C. Чётность</li>
-      <li>D. Максимум</li>
-      <li>E. Строки</li>
-    </ul>
+      <ul class="task-list">
+        {% for task_item in task.lesson.tasks.all %}
+          <li class="{% if task_item.slug == task.slug %}active{% endif %}">
+            <a href="{% if task_item.slug == task.slug %}#{% else %}{% url 'education:task_detail' task.lesson.module.course.slug task.lesson.slug task_item.slug %}{% endif %}">
+              {{ task_item.order }}. {{ task_item.title }}
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
 
-  </aside>
+    </aside>
 
-  <!-- LEFT PANEL -->
-  <aside class="task-left">
+    <!-- LEFT PANEL -->
+    <aside class="task-left">
 
-    <label for="sidebar-toggle" class="open-btn">☰ Задачи</label>
+      <label for="sidebar-toggle" class="open-btn">☰ Задачи</label>
 
-    <div class="task-title">
-      A. Таблица умножения
-    </div>
+      <div class="task-title">
+        {{ task.order }}. {{ task.title }}
+      </div>
 
-    <div class="task-meta">
-      <div>⏱ 1 сек</div>
-      <div>💾 64 MB</div>
-    </div>
+      <div class="task-meta">
+        <div>⏱ {{ task.execution_time_limit }} сек</div>
+        <div>💾 {{ task.size_limit }} MB</div>
+      </div>
 
-    <div class="task-section">
-      <h3>Ввод</h3>
-      <p>Стандартный ввод или input.txt</p>
-    </div>
+      {% for block in task.blocks.all %}
 
-    <div class="task-section">
-      <h3>Вывод</h3>
-      <p>Стандартный вывод или output.txt</p>
-    </div>
+        {% if block.type == "text" %}
+          <div class="task-description">
+            {{ block.content|linebreaks }}
+          </div>
+        {% endif %}
 
-    <div class="task-description">
-      <p>
-        Напишите программу, которая по введённому числу n выводит таблицу умножения n × n.
-      </p>
-    </div>
+        {% if block.type == "code" %}
+          {{ block.content|escape }}
+        {% endif %}
 
-    <div class="task-example">
-      <h3>Пример</h3>
+        {% if block.type == "image" %}
+          <div class="content-block image-block">
+            <img src="{{ block.content }}" alt="Task image">
+          </div>
+        {% endif %}
 
-      <div class="example-box">
-        <div>
-          <b>Ввод</b>
-          <pre>3</pre>
+        {% if block.type == "hint" and block.hint %}
+          <details class="content-block hint-block">
+
+            <summary>
+              {{ block.hint }}
+            </summary>
+
+            <div class="hint-content">
+
+              {% for hint_block in block.hint.blocks.all %}
+
+                {% if hint_block.type == "text" %}
+                  <div class="hint-text-block">
+                    {{ hint_block.content|linebreaks }}
+                  </div>
+                {% endif %}
+
+                {% if hint_block.type == "code" %}
+                  <div class="hint-code-block">
+                    <pre><code>{{ hint_block.content|escape }}</code></pre>
+                  </div>
+                {% endif %}
+
+                {% if hint_block.type == "image" %}
+                  <div class="hint-image-block">
+                    <img src="{{ hint_block.content }}" alt="Hint image">
+                  </div>
+                {% endif %}
+
+                {% if hint_block.type == "note" %}
+                  <div class="hint-note-block">
+                    {{ hint_block.content|linebreaks }}
+                  </div>
+                {% endif %}
+
+              {% endfor %}
+
+            </div>
+
+          </details>
+        {% endif %}
+
+      {% endfor %}
+
+    </aside>
+
+    <!-- RIGHT PANEL -->
+    <main class="task-right">
+
+      <div class="top-bar">
+
+        <div class="tabs">
+          <div class="tab active">Код</div>
+          <div class="tab">Описание</div>
+          <div class="tab">Решения</div>
         </div>
 
-        <div>
-          <b>Вывод</b>
-<pre>1 2 3
-2 4 6
-3 6 9</pre>
+        <div class="actions">
+          <div class="counter">Осталось попыток: 996</div>
+          <button class="send-btn">Отправить</button>
         </div>
-      </div>
-    </div>
 
-  </aside>
-
-  <!-- RIGHT PANEL -->
-  <main class="task-right">
-
-    <div class="top-bar">
-
-      <div class="tabs">
-        <div class="tab active">Код</div>
-        <div class="tab">Описание</div>
-        <div class="tab">Решения</div>
       </div>
 
-      <div class="actions">
-        <div class="counter">Осталось попыток: 996</div>
-        <button class="send-btn">Отправить</button>
+      <div class="editor">
+
+        <div class="editor-header">
+          <span>(make) python-handbook</span>
+        </div>
+
+        <textarea class="code-area" placeholder="Напишите решение..."></textarea>
+
       </div>
 
-    </div>
+    </main>
 
-    <div class="editor">
-      <div class="editor-header">
-        <span>(make) python-handbook</span>
-      </div>
-
-      <textarea class="code-area" placeholder="Напишите решение..."></textarea>
-    </div>
-
-  </main>
-
-</div>
+  </div>
 
 </body>
 </html>

@@ -1,10 +1,22 @@
 from django.contrib import admin
-from .models import ContentBlock, Course, Module, Lesson, Task, Submission, UserProgress
+
+from .models import (
+    Course,
+    Lesson,
+    LessonContentBlock,
+    Module,
+    Submission,
+    Task,
+    TaskContentBlock,
+    TaskHint,
+    TaskHintContentBlock,
+    UserProgress,
+)
 
 class TaskInline(admin.TabularInline):
     model = Task
     extra = 0
-    fields = ("title", "order")
+    fields = ("title", "order", "execution_time_limit", "size_limit")
     ordering = ("order",)
 
 
@@ -22,19 +34,61 @@ class ModuleInline(admin.TabularInline):
     ordering = ("order",)
 
 class ContentBlockInline(admin.TabularInline):
-    model = ContentBlock
+    model = LessonContentBlock
     extra = 1
     fields = ("type", "content", "order")
     ordering = ("order",)
-    
+
+
+class TaskContentBlockInline(admin.TabularInline):
+    model = TaskContentBlock
+    extra = 1
+    fields = ("type", "content", "hint", "order")
+    autocomplete_fields = ("hint",)
+    ordering = ("order",)
+
     
 @admin.register(Task)
 class TaskAdmin(admin.ModelAdmin):
-    list_display = ("title", "lesson", "order")
+    list_display = (
+        "title",
+        "lesson",
+        "order",
+        "execution_time_limit",
+        "size_limit",
+    )
     list_filter = ("lesson",)
-    search_fields = ("title",)
+    search_fields = ("title", "lesson__title")
     ordering = ("lesson", "order")
     prepopulated_fields = {"slug": ("title",)}
+    inlines = [TaskContentBlockInline]
+    fields = (
+        "lesson",
+        "title",
+        "slug",
+        "order",
+        "execution_time_limit",
+        "size_limit",
+        "starter_code",
+    )
+
+
+class TaskHintContentBlockInline(admin.TabularInline):
+    model = TaskHintContentBlock
+    extra = 1
+    fields = ("type", "content", "order")
+    ordering = ("order",)
+
+
+@admin.register(TaskHint)
+class TaskHintAdmin(admin.ModelAdmin):
+    list_display = ("__str__", "task", "order")
+    list_filter = ("task__lesson",)
+    search_fields = ("task__title",)
+    ordering = ("task", "order")
+    inlines = [TaskHintContentBlockInline]
+    autocomplete_fields = ("task",)
+    fields = ("task", "order")
 
 
 @admin.register(Lesson)

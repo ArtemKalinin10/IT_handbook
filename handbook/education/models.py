@@ -90,7 +90,7 @@ class Lesson(models.Model):
     def __str__(self):
         return self.title
 
-class ContentBlock(models.Model):
+class LessonContentBlock(models.Model):
     class BlockType(models.TextChoices):
         TEXT = "text"
         CODE = "code"
@@ -118,7 +118,8 @@ class Task(models.Model):
         related_name="tasks",
     )
     title = models.CharField(max_length=100)
-    description = models.TextField()
+    size_limit = models.PositiveIntegerField()
+    execution_time_limit = models.PositiveIntegerField()
     starter_code = models.TextField(blank=True)
     slug = models.SlugField(blank=True, unique=True)
     order = models.PositiveIntegerField()
@@ -148,7 +149,74 @@ class Task(models.Model):
 
     def __str__(self):
         return self.title
+    
+class TaskHint(models.Model):
+    task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name="hints")
+    order = models.PositiveIntegerField(default=0)
+    
+    class Meta:
+        ordering = ["order"]
+        constraints = [
+            models.UniqueConstraint(
+                fields=["task", "order"],
+                name="unique_hint_order_per_task",
+            )
+        ]
 
+    def __str__(self):
+        return f"Подсказка {self.order}"
+
+    
+class TaskContentBlock(models.Model):
+    class BlockType(models.TextChoices):
+        TEXT = "text"
+        CODE = "code"
+        IMAGE = "image"
+        HINT = "hint"
+
+    task = models.ForeignKey(
+        "Task",
+        on_delete=models.CASCADE,
+        related_name="blocks"
+    )
+
+    type = models.CharField(max_length=20, choices=BlockType.choices)
+    content = models.TextField(blank=True)
+    hint = models.ForeignKey(
+        "TaskHint",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="placement_blocks",
+    )
+    order = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        ordering = ["order"]
+
+class TaskHintContentBlock(models.Model):
+    class BlockType(models.TextChoices):
+        TEXT = "text", "Text"
+        CODE = "code", "Code"
+        IMAGE = "image", "Image"
+        NOTE = "note", "Note"
+
+    hint = models.ForeignKey(
+        "TaskHint",
+        on_delete=models.CASCADE,
+        related_name="blocks",
+    )
+    type = models.CharField(max_length=20, choices=BlockType.choices)
+    content = models.TextField(blank=True)
+    order = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        ordering = ["order"]
+
+    def __str__(self):
+        return f"{self.hint} - {self.type} - {self.order}"
+
+     
 class SubmissionStatus(models.TextChoices):
     PENDING = "pending", "Проверка"
     DONE = "done", "Готово"

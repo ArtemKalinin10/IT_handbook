@@ -14,6 +14,8 @@
 
 {% include 'education/header_template.html' %}
 
+<input type="checkbox" id="sidebar-toggle" hidden>
+
 <main class="lesson-layout">
 
   <!-- SIDEBAR -->
@@ -50,13 +52,6 @@
                 >
                   <span class="progress-circle-inner"></span>
                 </span>
-              {% else %}
-                <span
-                  class="progress-circle progress-circle-empty sidebar-progress-circle"
-                  aria-label="Нет задач"
-                >
-                  <span class="progress-circle-inner"></span>
-                </span>
               {% endif %}
             </a>
 
@@ -73,6 +68,12 @@
   <!-- CONTENT -->
   <section class="lesson-content">
 
+    <div class="lesson-topbar">
+      <label for="sidebar-toggle" class="sidebar-open">
+        ☰ Содержание
+      </label>
+    </div>
+
     <div class="lesson-header">
 
       <div class="breadcrumbs">
@@ -86,23 +87,18 @@
           <span
             class="progress-circle"
             style="--progress: {{ lesson.progress_percent }}%;"
-            aria-label="Прогресс урока"
-          >
+            aria-label="Прогресс урока">
             <span class="progress-circle-inner"></span>
           </span>
-        {% else %}
-          <span class="progress-circle progress-circle-empty" aria-label="Нет задач">
-            <span class="progress-circle-inner"></span>
+
+          <span class="lesson-progress-text">
+            {{ lesson.completed_tasks }}/{{ lesson.total_tasks }} выполнено
           </span>
         {% endif %}
-
-        <span class="lesson-progress-text">
-          {{ lesson.completed_tasks }}/{{ lesson.total_tasks }} выполнено
-        </span>
       </div>
 
     </div>
-
+    
     <div class="content-blocks">
 
       {% for block in lesson.blocks.all %}

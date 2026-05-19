@@ -58,14 +58,13 @@
                   >
                     <span class="progress-circle-inner"></span>
                   </span>
-                {% else %}
-                  <span class="progress-circle progress-circle-empty" aria-label="Нет задач">
-                    <span class="progress-circle-inner"></span>
+
+                  <span class="progress-count">
+                    {{ lesson.completed_tasks }}/{{ lesson.total_tasks }} выполнено
                   </span>
+                  
                 {% endif %}
-                <span class="progress-count">
-                  {{ lesson.completed_tasks }}/{{ lesson.total_tasks }} выполнено
-                </span>
+
               </div>
 
             </a>
