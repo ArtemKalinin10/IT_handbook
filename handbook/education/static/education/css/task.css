@@ -90,6 +90,7 @@ pre {
   border: 1px solid rgba(255,255,255,0.05);
   border-radius: 12px;
   overflow: hidden;
+  transition: border-color 0.25s ease, background 0.25s ease;
 }
 
 .hint-block summary {
@@ -107,6 +108,7 @@ pre {
 
 .hint-content {
   padding: 0 16px 16px;
+  overflow: hidden;
 }
 
 .hint-text-block,
@@ -308,4 +310,75 @@ pre {
 
 .open-btn:hover {
   background: rgba(59,130,246,0.25);
+}
+
+/* === FIX: CODE BLOCK IN TASK DESCRIPTION === */
+
+.task-code-block {
+  margin: 18px 0;
+}
+
+.task-code-block pre {
+  background: #020617;
+  border: 1px solid rgba(255,255,255,0.06);
+  padding: 14px;
+  border-radius: 12px;
+  overflow-x: auto;
+  margin: 0;
+}
+
+.task-code-block code {
+  display: block;
+  font-family: Consolas, monospace;
+  font-size: 13px;
+  color: #93c5fd;
+  white-space: pre;
+  line-height: 1.5;
+}
+
+/* === COPY BUTTON CODE BLOCK === */
+
+.code-header {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 6px;
+}
+
+.copy-btn {
+  background: rgba(59,130,246,0.15);
+  border: 1px solid rgba(59,130,246,0.3);
+  color: #93c5fd;
+  font-size: 12px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.copy-btn:hover {
+  background: rgba(59,130,246,0.25);
+  color: white;
+}
+
+.hint-content {
+  opacity: 0;
+  transform: translateY(-6px);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+  pointer-events: none;
+  will-change: opacity, transform;
+}
+
+.hint-block[open] .hint-content {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.hint-block.is-animating .hint-content {
+  pointer-events: none;
+}
+
+.hint-block[open] {
+  background: rgba(255,255,255,0.05);
+  border-color: rgba(59,130,246,0.25);
 }

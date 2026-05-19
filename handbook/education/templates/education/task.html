@@ -5,17 +5,16 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Задача</title>
-
+  <script src="{% static 'education/js/task.js' %}" defer></script>
   <link rel="stylesheet" href="{% static 'education/css/task.css' %}">
 </head>
 <body>
 
-  <!-- TOGGLE SIDEBAR -->
   <input type="checkbox" id="sidebar-toggle" hidden>
 
   <div class="task-layout">
 
-    <!-- SIDEBAR (SLIDE MENU) -->
+    <!-- SIDEBAR -->
     <aside class="sidebar">
 
       <div class="sidebar-header">
@@ -35,7 +34,7 @@
 
     </aside>
 
-    <!-- LEFT PANEL -->
+    <!-- LEFT -->
     <aside class="task-left">
 
       <label for="sidebar-toggle" class="open-btn">☰ Задачи</label>
@@ -58,7 +57,17 @@
         {% endif %}
 
         {% if block.type == "code" %}
-          {{ block.content|escape }}
+          <div class="task-code-block">
+
+            <div class="code-header">
+              <button type="button" class="copy-btn" onclick="copyCode(this)">
+                📋 Копировать
+              </button>
+            </div>
+
+            <pre><code>{{ block.content|escape }}</code></pre>
+
+          </div>
         {% endif %}
 
         {% if block.type == "image" %}
@@ -113,7 +122,7 @@
 
     </aside>
 
-    <!-- RIGHT PANEL -->
+    <!-- RIGHT -->
     <main class="task-right">
 
       <div class="top-bar">
