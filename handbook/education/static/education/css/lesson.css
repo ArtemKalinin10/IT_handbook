@@ -239,15 +239,82 @@ body {
 .code-block pre {
   background: #020617;
   border: 1px solid rgba(255,255,255,0.06);
+  border-top: none;
   padding: 22px;
-  border-radius: 16px;
+  border-radius: 0 0 16px 16px;
   overflow-x: auto;
+  margin: 0;
 }
 
 .code-block code {
   color: #93c5fd;
   font-size: 14px;
   font-family: Consolas, monospace;
+}
+
+.copyable-code-block {
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.code-header {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 12px 16px;
+  background: rgba(148,163,184,0.14);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-bottom: none;
+  border-radius: 16px 16px 0 0;
+  backdrop-filter: blur(8px);
+}
+
+.copy-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: transparent;
+  border: none;
+  color: #dbe4ee;
+  font-size: 15px;
+  padding: 0;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.copy-btn:hover {
+  color: #ffffff;
+}
+
+.copy-btn.copied {
+  color: #93c5fd;
+}
+
+.copy-btn-text {
+  line-height: 1;
+}
+
+.copy-btn-icon {
+  width: 14px;
+  height: 14px;
+  border: 1.5px solid currentColor;
+  border-radius: 2px;
+  position: relative;
+  opacity: 0.9;
+  flex-shrink: 0;
+}
+
+.copy-btn-icon::before {
+  content: "";
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border: 1.5px solid currentColor;
+  border-radius: 2px;
+  top: -4px;
+  left: -4px;
+  opacity: 0.55;
+  background: transparent;
 }
 
 /* NOTE */

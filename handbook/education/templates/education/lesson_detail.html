@@ -8,6 +8,7 @@
 
   <title>{{ lesson.title }}</title>
 
+  <script src="{% static 'education/js/code_copy.js' %}" defer></script>
   <link rel="stylesheet" href="{% static 'education/css/lesson.css' %}">
 </head>
 <body>
@@ -110,7 +111,13 @@
         {% endif %}
 
         {% if block.type == "code" %}
-          <div class="content-block code-block">
+          <div class="content-block code-block copyable-code-block">
+            <div class="code-header">
+              <button type="button" class="copy-btn" onclick="copyCode(this)">
+                <span class="copy-btn-text">Скопировать код</span>
+                <span class="copy-btn-icon" aria-hidden="true"></span>
+              </button>
+            </div>
             <pre><code>{{ block.content|escape }}</code></pre>
           </div>
         {% endif %}

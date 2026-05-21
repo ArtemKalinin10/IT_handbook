@@ -1,15 +1,3 @@
-function copyCode(btn) {
-  const codeBlock = btn.closest('.task-code-block').querySelector('code');
-  const text = codeBlock.innerText;
-
-  navigator.clipboard.writeText(text).then(() => {
-    btn.innerText = "✔ Скопировано";
-    setTimeout(() => {
-      btn.innerText = "📋 Копировать";
-    }, 1500);
-  });
-}
-
 function animateHintToggle(details, summary, content) {
   if (details.dataset.animating === "true") {
     return;
