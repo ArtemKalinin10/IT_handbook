@@ -103,5 +103,13 @@ def task_detail(request, course_slug, lesson_slug, task_slug):
         lesson__slug=lesson_slug,
         lesson__module__course__slug=course_slug,
     )
+    
+    submissions = task.submissions.order_by("-created_at")
 
-    return render(request, "education/task.html", {"task": task})
+    return render(request, "education/task.html",
+                  {"task": task,
+                   "submissions": submissions
+                   }
+    )
+
+

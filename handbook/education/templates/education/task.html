@@ -146,15 +146,38 @@
           {% endfor %}
         </section>
 
-        <section class="left-tab-panel" id="solutions-panel">
-          <div class="solutions-placeholder">
-            <h2>Решения</h2>
-            <p>Здесь можно будет разместить разбор, альтернативные подходы или эталонное решение задачи.</p>
-            <p>Сейчас этот раздел подготовлен как отдельная вкладка интерфейса, как на вашем примере.</p>
-          </div>
-        </section>
-      </div>
+      <section class="left-tab-panel" id="solutions-panel">
 
+        <div class="solutions-table">
+
+          <div class="solutions-head">
+            <div>Время отправки</div>
+            <div>Вердикт</div>
+          </div>
+
+          {% for submission in submissions %}
+            <div class="solution-row">
+              <div class="solution-time">{{ submission.created_at|date:"d.m.y H:i" }}</div>
+
+              {% if submission.status == 'done' %}
+                <div class="solution-verdict accepted">
+                  Решение зачтено OK
+                </div>
+              {% elif submission.status == 'failed' %}
+                <div class="solution-verdict wrong">
+                  Неправильный ответ WA
+                </div>
+              {% elif submission.status == 'pending' %}
+                <div class="solution-verdict pending">
+                  Проверка PD
+                </div>
+              {% endif %}
+              
+            </div>
+          {% endfor %}
+        </div>
+      </section>
+      </div>
     </aside>
 
     <!-- RIGHT -->

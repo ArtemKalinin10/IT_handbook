@@ -554,3 +554,57 @@ pre,
     justify-content: space-between;
   }
 }
+
+.solutions-table {
+  width: 100%;
+}
+
+.solutions-head,
+.solution-row {
+  display: grid;
+  grid-template-columns: 170px 1.5fr 1.5fr 100px;
+  align-items: center;
+  gap: 20px;
+}
+
+.solutions-head {
+  padding: 14px 0;
+  font-size: 14px;
+  color: #8b8b8b;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.solution-row {
+  padding: 18px 0;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 15px;
+}
+
+.solution-verdict.accepted {
+  color: #1ea672;
+  font-weight: 500;
+}
+
+.solution-verdict.wrong {
+  color: #ff4d4f;
+  font-weight: 500;
+}
+
+.solution-score.failed {
+  color: #b5b5b5;
+}
+
+.solution-verdict.accepted {
+  color: #1ea672;
+  font-weight: 500;
+}
+
+.solution-verdict.wrong {
+  color: #ff4d4f;
+  font-weight: 500;
+}
+
+.solution-verdict.pending {
+  color: #ff9800;
+  font-weight: 500;
+}
