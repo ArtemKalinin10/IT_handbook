@@ -40,93 +40,120 @@
 
       <label for="sidebar-toggle" class="open-btn">☰ Задачи</label>
 
-      <div class="task-title">
-        {{ task.order }}. {{ task.title }}
-      </div>
+      <div class="task-panel">
+        <div class="left-tabs" role="tablist" aria-label="Навигация по задаче">
+          <button type="button" class="left-tab active" data-tab-target="description-panel" aria-selected="true">
+            Описание
+          </button>
+          <button type="button" class="left-tab" data-tab-target="solutions-panel" aria-selected="false">
+            Решения
+          </button>
+        </div>
 
-      <div class="task-meta">
-        <div>⏱ {{ task.execution_time_limit }} сек</div>
-        <div>💾 {{ task.size_limit }} MB</div>
-      </div>
-
-      {% for block in task.blocks.all %}
-
-        {% if block.type == "text" %}
-          <div class="task-description">
-            {{ block.content|linebreaks }}
+        <section class="left-tab-panel active" id="description-panel">
+          <div class="task-title">
+            {{ task.order }}. {{ task.title }}
           </div>
-        {% endif %}
 
-        {% if block.type == "code" %}
-          <div class="task-code-block copyable-code-block">
-
-            <div class="code-header">
-              <button type="button" class="copy-btn" onclick="copyCode(this)">
-                <span class="copy-btn-text">Скопировать код</span>
-                <span class="copy-btn-icon" aria-hidden="true"></span>
-              </button>
+          <div class="task-meta-card">
+            <div class="task-meta-item">
+              <span class="task-meta-label">Ограничение времени</span>
+              <span class="task-meta-value">{{ task.execution_time_limit }} сек</span>
             </div>
-
-            <pre><code>{{ block.content|escape }}</code></pre>
-
-          </div>
-        {% endif %}
-
-        {% if block.type == "image" %}
-          <div class="content-block image-block">
-            <img src="{{ block.content }}" alt="Task image">
-          </div>
-        {% endif %}
-
-        {% if block.type == "hint" and block.hint %}
-          <details class="content-block hint-block">
-
-            <summary>
-              {{ block.hint }}
-            </summary>
-
-            <div class="hint-content">
-
-              {% for hint_block in block.hint.blocks.all %}
-
-                {% if hint_block.type == "text" %}
-                  <div class="hint-text-block">
-                    {{ hint_block.content|linebreaks }}
-                  </div>
-                {% endif %}
-
-                {% if hint_block.type == "code" %}
-                  <div class="hint-code-block copyable-code-block">
-                    <div class="code-header">
-                      <button type="button" class="copy-btn" onclick="copyCode(this)">
-                        <span class="copy-btn-text">Скопировать код</span>
-                        <span class="copy-btn-icon" aria-hidden="true"></span>
-                      </button>
-                    </div>
-                    <pre><code>{{ hint_block.content|escape }}</code></pre>
-                  </div>
-                {% endif %}
-
-                {% if hint_block.type == "image" %}
-                  <div class="hint-image-block">
-                    <img src="{{ hint_block.content }}" alt="Hint image">
-                  </div>
-                {% endif %}
-
-                {% if hint_block.type == "note" %}
-                  <div class="hint-note-block">
-                    {{ hint_block.content|linebreaks }}
-                  </div>
-                {% endif %}
-
-              {% endfor %}
-
+            <div class="task-meta-item">
+              <span class="task-meta-label">Ограничение памяти</span>
+              <span class="task-meta-value">{{ task.size_limit }} MB</span>
             </div>
+          </div>
 
-          </details>
-        {% endif %}
+          {% for block in task.blocks.all %}
 
-      {% endfor %}
+            {% if block.type == "text" %}
+              <div class="task-description">
+                {{ block.content|linebreaks }}
+              </div>
+            {% endif %}
+
+            {% if block.type == "code" %}
+              <div class="task-code-block copyable-code-block">
+
+                <div class="code-header">
+                  <button type="button" class="copy-btn" onclick="copyCode(this)">
+                    <span class="copy-btn-text">Скопировать код</span>
+                    <span class="copy-btn-icon" aria-hidden="true"></span>
+                  </button>
+                </div>
+
+                <pre><code>{{ block.content|escape }}</code></pre>
+
+              </div>
+            {% endif %}
+
+            {% if block.type == "image" %}
+              <div class="content-block image-block">
+                <img src="{{ block.content }}" alt="Task image">
+              </div>
+            {% endif %}
+
+            {% if block.type == "hint" and block.hint %}
+              <details class="content-block hint-block">
+
+                <summary>
+                  {{ block.hint }}
+                </summary>
+
+                <div class="hint-content">
+
+                  {% for hint_block in block.hint.blocks.all %}
+
+                    {% if hint_block.type == "text" %}
+                      <div class="hint-text-block">
+                        {{ hint_block.content|linebreaks }}
+                      </div>
+                    {% endif %}
+
+                    {% if hint_block.type == "code" %}
+                      <div class="hint-code-block copyable-code-block">
+                        <div class="code-header">
+                          <button type="button" class="copy-btn" onclick="copyCode(this)">
+                            <span class="copy-btn-text">Скопировать код</span>
+                            <span class="copy-btn-icon" aria-hidden="true"></span>
+                          </button>
+                        </div>
+                        <pre><code>{{ hint_block.content|escape }}</code></pre>
+                      </div>
+                    {% endif %}
+
+                    {% if hint_block.type == "image" %}
+                      <div class="hint-image-block">
+                        <img src="{{ hint_block.content }}" alt="Hint image">
+                      </div>
+                    {% endif %}
+
+                    {% if hint_block.type == "note" %}
+                      <div class="hint-note-block">
+                        {{ hint_block.content|linebreaks }}
+                      </div>
+                    {% endif %}
+
+                  {% endfor %}
+
+                </div>
+
+              </details>
+            {% endif %}
+
+          {% endfor %}
+        </section>
+
+        <section class="left-tab-panel" id="solutions-panel">
+          <div class="solutions-placeholder">
+            <h2>Решения</h2>
+            <p>Здесь можно будет разместить разбор, альтернативные подходы или эталонное решение задачи.</p>
+            <p>Сейчас этот раздел подготовлен как отдельная вкладка интерфейса, как на вашем примере.</p>
+          </div>
+        </section>
+      </div>
 
     </aside>
 
@@ -134,11 +161,8 @@
     <main class="task-right">
 
       <div class="top-bar">
-
-        <div class="tabs">
-          <div class="tab active">Код</div>
-          <div class="tab">Описание</div>
-          <div class="tab">Решения</div>
+        <div class="editor-title-wrap">
+          <div class="editor-panel-title">Код</div>
         </div>
 
         <div class="actions">

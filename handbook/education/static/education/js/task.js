@@ -46,6 +46,30 @@ function animateHintToggle(details, summary, content) {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll(".left-tab").forEach((tab) => {
+    tab.addEventListener("click", () => {
+      const targetId = tab.dataset.tabTarget;
+      const targetPanel = targetId ? document.getElementById(targetId) : null;
+
+      if (!targetPanel) {
+        return;
+      }
+
+      document.querySelectorAll(".left-tab").forEach((item) => {
+        item.classList.remove("active");
+        item.setAttribute("aria-selected", "false");
+      });
+
+      document.querySelectorAll(".left-tab-panel").forEach((panel) => {
+        panel.classList.remove("active");
+      });
+
+      tab.classList.add("active");
+      tab.setAttribute("aria-selected", "true");
+      targetPanel.classList.add("active");
+    });
+  });
+
   document.querySelectorAll(".hint-block").forEach((details) => {
     const summary = details.querySelector("summary");
     const content = details.querySelector(".hint-content");
