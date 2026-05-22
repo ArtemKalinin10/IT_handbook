@@ -1,5 +1,7 @@
-from django.shortcuts import render, get_object_or_404
-from .models import Course, Lesson, ProgressStatus, Task, UserProgress
+from django.shortcuts import redirect, render, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from education.forms import SubmissionForm
+from .models import Course, Lesson, ProgressStatus, Submission, SubmissionStatus, Task, UserProgress
 
 
 def attach_single_lesson_progress(lesson, completed_task_ids):
@@ -104,12 +106,42 @@ def task_detail(request, course_slug, lesson_slug, task_slug):
         lesson__module__course__slug=course_slug,
     )
     
-    submissions = task.submissions.order_by("-created_at")
+    submissions = task.submissions.filter(user=request.user).order_by("-created_at")
+    form = SubmissionForm()
 
     return render(request, "education/task.html",
                   {"task": task,
-                   "submissions": submissions
+                   "submissions": submissions,
+                   "form": form
                    }
     )
 
-
+@login_required
+def send_submission(request, course_slug, lesson_slug, task_slug):
+    if request.method != "POST":
+        return redirect("education:task_detail", course_slug, lesson_slug, task_slug)
+    
+    task = get_object_or_404(
+        Task,
+        slug=task_slug,
+        lesson__slug=lesson_slug,
+        lesson__module__course__slug=course_slug
+    )
+    
+    form = SubmissionForm(request.POST)
+    
+    if form.is_valid():
+        submission = Submission.objects.create(
+            user=request.user,
+            task=task,
+            code=form.cleaned_data["code"],
+            status=SubmissionStatus.PENDING
+        )
+        
+        UserProgress.objects.get_or_create(
+            user=request.user,
+            task=task,
+            defaults={"status": ProgressStatus.IN_PROGRESS}
+        )
+    
+    return redirect("education:task_detail", course_slug, lesson_slug, task_slug)

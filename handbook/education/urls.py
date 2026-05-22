@@ -17,5 +17,10 @@ urlpatterns = [
         "courses/<slug:course_slug>/lessons/<slug:lesson_slug>/tasks/<slug:task_slug>/",
          views.task_detail,
          name="task_detail"
+    ),
+    path(
+        "courses/<slug:course_slug>/lessons/<slug:lesson_slug>/tasks/<slug:task_slug>/submit/",
+         views.send_submission,
+         name="send_submission"
     )
 ]

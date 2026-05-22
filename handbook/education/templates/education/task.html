@@ -183,27 +183,15 @@
     <!-- RIGHT -->
     <main class="task-right">
 
-      <div class="top-bar">
-        <div class="editor-title-wrap">
-          <div class="editor-panel-title">Код</div>
-        </div>
+      <form method="post" action="{% url 'education:send_submission' task.lesson.module.course.slug task.lesson.slug task.slug %}">
+        {% csrf_token %}
 
-        <div class="actions">
-          <div class="counter">Осталось попыток: 996</div>
-          <button class="send-btn">Отправить</button>
-        </div>
+        {{ form.code }}
 
-      </div>
-
-      <div class="editor">
-
-        <div class="editor-header">
-          <span>(make) python-handbook</span>
-        </div>
-
-        <textarea class="code-area" placeholder="Напишите решение..."></textarea>
-
-      </div>
+        <button type="submit" class="btn">
+            отправить
+        </button>
+      </form>
 
     </main>
 
