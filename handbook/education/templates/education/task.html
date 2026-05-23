@@ -37,17 +37,18 @@
 
     <!-- LEFT -->
     <aside class="task-left">
-
-      <label for="sidebar-toggle" class="open-btn">☰ Задачи</label>
-
       <div class="task-panel">
-        <div class="left-tabs" role="tablist" aria-label="Навигация по задаче">
-          <button type="button" class="left-tab active" data-tab-target="description-panel" aria-selected="true">
-            Описание
-          </button>
-          <button type="button" class="left-tab" data-tab-target="solutions-panel" aria-selected="false">
-            Решения
-          </button>
+        <div class="left-panel-header">
+          <label for="sidebar-toggle" class="open-btn">☰ Задачи</label>
+
+          <div class="left-tabs" role="tablist" aria-label="Навигация по задаче">
+            <button type="button" class="left-tab active" data-tab-target="description-panel" aria-selected="true">
+              Описание
+            </button>
+            <button type="button" class="left-tab" data-tab-target="solutions-panel" aria-selected="false">
+              Решения
+            </button>
+          </div>
         </div>
 
         <section class="left-tab-panel active" id="description-panel">
@@ -183,14 +184,45 @@
     <!-- RIGHT -->
     <main class="task-right">
 
-      <form method="post" action="{% url 'education:send_submission' task.lesson.module.course.slug task.lesson.slug task.slug %}">
+      <div class="editor-topbar">
+
+        <div class="editor-info">
+          <div class="editor-title">
+            Отправка решения
+          </div>
+
+          <div class="editor-subtitle">
+            Python 3.11
+          </div>
+        </div>
+
+        <button type="submit" form="submission-form" class="submit-btn">
+          <span>Отправить</span>
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            <path d="M13 6L19 12L13 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </button>
+
+      </div>
+
+      <form
+        id="submission-form"
+        method="post"
+        class="submission-form"
+        action="{% url 'education:send_submission' task.lesson.module.course.slug task.lesson.slug task.slug %}"
+      >
         {% csrf_token %}
 
-        {{ form.code }}
+        <div class="editor-wrapper">
 
-        <button type="submit" class="btn">
-            отправить
-        </button>
+          <div class="editor-label">
+            main.py
+          </div>
+
+          {{ form.code }}
+
+        </div>
       </form>
 
     </main>

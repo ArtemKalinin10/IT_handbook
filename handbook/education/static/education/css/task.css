@@ -15,6 +15,20 @@ pre {
   overflow-x: auto;
 }
 
+.sidebar,
+.left-tab-panel,
+#id_code {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.sidebar::-webkit-scrollbar,
+.left-tab-panel::-webkit-scrollbar,
+#id_code::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
 code,
 pre,
 .code-area {
@@ -134,10 +148,19 @@ pre,
   overflow: hidden;
 }
 
+.left-panel-header {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 18px 22px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
 .open-btn {
   display: inline-flex;
   align-items: center;
-  margin-bottom: 10px;
+  width: fit-content;
+  flex-shrink: 0;
   cursor: pointer;
   font-size: 14px;
   color: #93c5fd;
@@ -155,8 +178,7 @@ pre,
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 14px 18px 0;
-  border-bottom: 1px solid rgba(255,255,255,0.05);
+  min-height: 54px;
 }
 
 .left-tab {
@@ -545,6 +567,13 @@ pre,
     grid-template-columns: 1fr;
   }
 
+  .left-panel-header {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 10px;
+    padding: 14px 16px 0;
+  }
+
   .top-bar {
     flex-direction: column;
     align-items: stretch;
@@ -607,4 +636,184 @@ pre,
 .solution-verdict.pending {
   color: #ff9800;
   font-weight: 500;
+}
+
+/* =========================
+   SUBMISSION FORM
+========================= */
+
+.task-right {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  margin: 14px 14px 14px 8px;
+  overflow: hidden;
+  background: #0f172a;
+  border-radius: 22px;
+  border: 1px solid rgba(255,255,255,0.06);
+  box-shadow:
+    0 10px 30px rgba(0,0,0,0.35),
+    inset 0 1px 0 rgba(255,255,255,0.03);
+}
+
+.editor-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 22px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255,255,255,0.03),
+      rgba(255,255,255,0)
+    );
+}
+
+.editor-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.editor-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #f8fafc;
+}
+
+.editor-subtitle {
+  font-size: 13px;
+  color: #94a3b8;
+}
+
+.submission-form {
+  flex: 1;
+  display: flex;
+  min-height: 0;
+  width: 100%;
+  overflow: hidden;
+}
+
+.editor-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 18px;
+  min-height: 0;
+  width: 100%;
+  overflow: hidden;
+}
+
+.editor-label {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  margin-bottom: 14px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: rgba(59,130,246,0.12);
+  border: 1px solid rgba(59,130,246,0.18);
+  color: #93c5fd;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+#id_code {
+  display: block;
+  flex: 1;
+  width: 100%;
+  min-height: 0;
+  height: 100%;
+  resize: none;
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 18px;
+  background: #020617;
+  color: #dbeafe;
+  padding: 22px;
+  outline: none;
+
+  font-size: 15px;
+  line-height: 1.7;
+  font-family: Consolas, "Courier New", monospace;
+  overflow: auto;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
+}
+
+#id_code:focus {
+  border-color: rgba(59,130,246,0.45);
+  box-shadow:
+    0 0 0 4px rgba(59,130,246,0.12),
+    0 10px 25px rgba(37,99,235,0.12);
+}
+
+#id_code::placeholder {
+  color: #64748b;
+}
+
+.submit-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+
+  border: none;
+  cursor: pointer;
+
+  padding: 12px 18px;
+  border-radius: 14px;
+
+  background: linear-gradient(
+    135deg,
+    #2563eb,
+    #3b82f6
+  );
+
+  color: white;
+  font-size: 14px;
+  font-weight: 700;
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    filter 0.2s ease;
+}
+
+.submit-btn svg {
+  width: 18px;
+  height: 18px;
+}
+
+.submit-btn:hover {
+  transform: translateY(-1px);
+  box-shadow:
+    0 10px 25px rgba(37,99,235,0.35);
+  filter: brightness(1.03);
+}
+
+.submit-btn:active {
+  transform: translateY(0);
+}
+
+@media (max-width: 720px) {
+
+  .editor-topbar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 14px;
+  }
+
+  .submit-btn {
+    justify-content: center;
+    width: 100%;
+  }
+
+  #id_code {
+    font-size: 14px;
+    padding: 18px;
+  }
 }

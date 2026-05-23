@@ -2,7 +2,16 @@
 from django import forms
 
 class SubmissionForm(forms.Form):
-    code = forms.CharField(widget=forms.Textarea)
+    code = forms.CharField(
+        widget=forms.Textarea(
+            attrs={
+                "class": "code-area",
+                "placeholder": "Введите решение здесь...",
+                "spellcheck": "false",
+                "rows": 1,
+            }
+        )
+    )
 
     def clean_code(self):
         code = self.cleaned_data["code"].strip()
