@@ -1,7 +1,13 @@
 from django.shortcuts import redirect, render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from education.forms import SubmissionForm
+from education.tasks import check_submission
 from .models import Course, Lesson, ProgressStatus, Submission, SubmissionStatus, Task, UserProgress
+
+import logging
+
+
+logger = logging.getLogger(__name__)
 
 
 def attach_single_lesson_progress(lesson, completed_task_ids):
@@ -143,5 +149,7 @@ def send_submission(request, course_slug, lesson_slug, task_slug):
             task=task,
             defaults={"status": ProgressStatus.IN_PROGRESS}
         )
-    
+        task = check_submission.delay(submission.id)
+        logger.info(f"Submitted task {task.id}")
+
     return redirect("education:task_detail", course_slug, lesson_slug, task_slug)
