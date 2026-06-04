@@ -6,14 +6,16 @@ from education.models import (
     ProgressStatus
 )
 
-import logging
+import logging, time 
 
+from education.websocket import send_submission_update
 
 logger = logging.getLogger(__name__)
 
 
 @shared_task
 def check_submission(submission_id):
+    time.sleep(5)
     try:
         submission = Submission.objects.get(pk=submission_id)
     except Submission.DoesNotExist:
@@ -31,6 +33,8 @@ def check_submission(submission_id):
     if submission.code == "print(5)":
         submission.status = SubmissionStatus.DONE
         submission.save(update_fields=["status"])
+        
+        send_submission_update(submission)
 
         UserProgress.objects.filter(
             user=submission.user,
@@ -49,6 +53,8 @@ def check_submission(submission_id):
     else:
         submission.status = SubmissionStatus.FAILED
         submission.save(update_fields=["status"])
+        
+        send_submission_update(submission)
 
         logger.info(
             "Submission %s failed",
