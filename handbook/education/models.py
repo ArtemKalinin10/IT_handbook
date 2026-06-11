@@ -215,7 +215,23 @@ class TaskHintContentBlock(models.Model):
 
     def __str__(self):
         return f"{self.hint} - {self.type} - {self.order}"
-
+    
+class Test(models.Model):
+    task = models.ForeignKey(
+        Task,
+        related_name="tests",
+        on_delete=models.CASCADE
+    )
+    input_data = models.TextField(blank=True)
+    expected_output = models.TextField()
+    
+    order = models.PositiveIntegerField(default=0)  
+    
+    class Meta:
+        ordering = ["order"]    
+        
+    def __str__(self):
+        return f"Test #{self.id} for Task {self.task_id}"
      
 class SubmissionStatus(models.TextChoices):
     PENDING = "pending", "Проверка"

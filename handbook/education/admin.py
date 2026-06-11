@@ -10,6 +10,7 @@ from .models import (
     TaskContentBlock,
     TaskHint,
     TaskHintContentBlock,
+    Test,
     UserProgress,
 )
 
@@ -19,7 +20,12 @@ class TaskInline(admin.TabularInline):
     fields = ("title", "order", "execution_time_limit", "size_limit")
     ordering = ("order",)
 
-
+class TestInline(admin.TabularInline):
+    model = Test
+    extra = 0
+    fields = ("order", "input_data", "expected_output")
+    ordering = ("order",)
+    
 class LessonInline(admin.TabularInline):
     model = Lesson
     extra = 0
@@ -61,7 +67,11 @@ class TaskAdmin(admin.ModelAdmin):
     search_fields = ("title", "lesson__title")
     ordering = ("lesson", "order")
     prepopulated_fields = {"slug": ("title",)}
-    inlines = [TaskContentBlockInline]
+    inlines = [
+        TaskContentBlockInline,
+        TestInline
+    ]
+    
     fields = (
         "lesson",
         "title",

@@ -2,6 +2,7 @@ from celery import shared_task
 from education.models import (
     Submission,
     SubmissionStatus,
+    Task,
     UserProgress,
     ProgressStatus
 )
@@ -17,7 +18,12 @@ logger = logging.getLogger(__name__)
 def check_submission(submission_id):
     time.sleep(5)
     try:
-        submission = Submission.objects.get(pk=submission_id)
+        submission = (
+            Submission.objects
+            .select_related("task")
+            .prefetch_related("task__tests")
+            .get(pk=submission_id)
+        )
     except Submission.DoesNotExist:
         logger.warning(
             "Submission not found: %s",
@@ -29,7 +35,11 @@ def check_submission(submission_id):
         "Processing submission %s",
         submission_id
     )
-
+    
+    tests = submission.task.tests.all()
+    for test in tests:
+        print(f"{test.input_data}-{test.expected_output}")
+    
     if submission.code == "print(5)":
         submission.status = SubmissionStatus.DONE
         submission.save(update_fields=["status"])
