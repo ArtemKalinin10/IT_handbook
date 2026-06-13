@@ -222,8 +222,8 @@ class Test(models.Model):
         related_name="tests",
         on_delete=models.CASCADE
     )
-    input_data = models.TextField(blank=True)
-    expected_output = models.TextField()
+    input_data = models.TextField(blank=True, help_text="Stdin для программы. Каждый input() читает одну строку.")
+    expected_output = models.TextField(help_text="Ожидаемый stdout. Сравнивается после strip().")
     
     order = models.PositiveIntegerField(default=0)  
     

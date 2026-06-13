@@ -93,6 +93,7 @@ def lesson_detail(request, course_slug, lesson_slug):
         {"lesson": lesson}
     )
 
+@login_required
 def task_detail(request, course_slug, lesson_slug, task_slug):
     task = get_object_or_404(
         Task.objects
@@ -149,7 +150,7 @@ def send_submission(request, course_slug, lesson_slug, task_slug):
             task=task,
             defaults={"status": ProgressStatus.IN_PROGRESS}
         )
-    celery_task = check_submission.delay(submission.id)
-    logger.info(f"Submitted task {celery_task.id}")
+        celery_task = check_submission.delay(submission.id)
+        logger.info(f"Submitted task {celery_task.id}")
 
     return redirect("education:task_detail", course_slug, lesson_slug, task_slug)
