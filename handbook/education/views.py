@@ -151,6 +151,6 @@ def send_submission(request, course_slug, lesson_slug, task_slug):
             defaults={"status": ProgressStatus.IN_PROGRESS}
         )
         celery_task = check_submission.delay(submission.id)
-        logger.info(f"Submitted task {celery_task.id}")
+        logger.info("Submitted task %s", celery_task.id)
 
     return redirect("education:task_detail", course_slug, lesson_slug, task_slug)
