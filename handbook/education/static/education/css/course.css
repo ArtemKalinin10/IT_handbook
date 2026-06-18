@@ -11,7 +11,6 @@ body {
   line-height: 1.5;
 }
 
-/* HEADER */
 .header {
   display: grid;
   grid-template-columns: 1fr auto 1fr;
@@ -41,7 +40,6 @@ body {
   letter-spacing: 0.5px;
 }
 
-/* BACK BUTTON */
 .back-btn {
   display: inline-flex;
   align-items: center;
@@ -67,14 +65,9 @@ body {
   color: #e5e7eb;
 }
 
-/* CONTAINER */
 .container {
   padding: 50px 40px;
 }
-
-/* =======================
-   HOME PAGE
-======================= */
 
 .hero {
   max-width: 1100px;
@@ -98,7 +91,6 @@ body {
   gap: 22px;
 }
 
-/* COURSE CARD */
 .card {
   background: linear-gradient(145deg, #111827, #0b1220);
   border: 1px solid rgba(255,255,255,0.06);
@@ -129,7 +121,6 @@ body {
   margin-bottom: 18px;
 }
 
-/* BUTTON */
 .card-btn {
   display: inline-block;
   padding: 10px 14px;
@@ -153,10 +144,6 @@ body {
   cursor: not-allowed;
 }
 
-/* =======================
-   COURSE DETAIL PAGE
-======================= */
-
 .course-header {
   max-width: 900px;
   margin: 0 auto 40px auto;
@@ -173,7 +160,6 @@ body {
   font-size: 16px;
 }
 
-/* MODULES */
 .modules {
   max-width: 900px;
   margin: 0 auto;
@@ -209,7 +195,6 @@ body {
   padding-left: 10px;
 }
 
-/* LESSON ITEM */
 .lesson-item {
   display: flex;
   align-items: center;
@@ -235,7 +220,6 @@ body {
   transform: translateX(4px);
 }
 
-/* LEFT SIDE */
 .lesson-left {
   display: flex;
   align-items: flex-start;
@@ -255,7 +239,6 @@ body {
   line-height: 1.4;
 }
 
-/* RIGHT SIDE */
 .lesson-progress {
   display: flex;
   align-items: center;
@@ -264,7 +247,6 @@ body {
   flex-shrink: 0;
 }
 
-/* PROGRESS */
 .progress-circle {
   --progress: 0%;
   width: 18px;

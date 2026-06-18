@@ -10,7 +10,6 @@ body {
   color: #e5e7eb;
 }
 
-/* HEADER */
 .header {
   padding: 18px 40px;
   background: rgba(17, 24, 39, 0.7);
@@ -24,12 +23,10 @@ body {
   letter-spacing: 0.5px;
 }
 
-/* CONTAINER */
 .container {
   padding: 60px 40px;
 }
 
-/* HERO */
 .hero {
   max-width: 1100px;
   margin: 0 auto;
@@ -46,14 +43,12 @@ body {
   margin-bottom: 40px;
 }
 
-/* GRID */
 .categories {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 22px;
 }
 
-/* CARD */
 .card {
   background: linear-gradient(145deg, #111827, #0b1220);
   border: 1px solid rgba(255,255,255,0.06);
@@ -71,7 +66,6 @@ body {
   box-shadow: 0 15px 35px rgba(59,130,246,0.12);
 }
 
-/* badge */
 .card-top {
   display: flex;
   justify-content: flex-start;
@@ -87,7 +81,6 @@ body {
   border: 1px solid rgba(59,130,246,0.3);
 }
 
-/* text */
 .card-title {
   font-size: 20px;
   margin-bottom: 10px;
@@ -101,7 +94,6 @@ body {
   margin-bottom: 18px;
 }
 
-/* button */
 .card-btn {
   display: inline-block;
   padding: 10px 14px;
@@ -119,10 +111,6 @@ body {
   filter: brightness(1.1);
 }
 
-/* =========================
-   AUTH
-========================= */
-
 .auth {
   display: flex;
   align-items: center;
@@ -135,7 +123,6 @@ body {
   padding-right: 6px;
 }
 
-/* BASE BUTTON */
 
 .btn {
   display: inline-flex;
@@ -157,7 +144,6 @@ body {
   cursor: pointer;
 }
 
-/* LOGIN */
 
 .btn {
   background: rgba(255,255,255,0.04);
@@ -170,8 +156,6 @@ body {
   transform: translateY(-2px);
 }
 
-/* REGISTER */
-
 .btn.primary {
   background: linear-gradient(90deg, #2563eb, #3b82f6);
   color: white;
@@ -183,8 +167,6 @@ body {
   filter: brightness(1.08);
 }
 
-/* LOGOUT */
-
 .btn.danger {
   background: rgba(239,68,68,0.12);
   color: #f87171;
@@ -195,8 +177,6 @@ body {
   background: rgba(239,68,68,0.18);
   transform: translateY(-2px);
 }
-
-/* HEADER FIX */
 
 .header {
   display: flex;

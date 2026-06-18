@@ -1,16 +1,21 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from .forms import RegistrationForm, LoginForm
+from django.views.decorators.http import require_POST
+from django.contrib.auth.decorators import login_required
+
 
 # Create your views here.
 
 def registration(request):
+    if request.user.is_authenticated:
+        return redirect("home")
+    
     if request.method == "POST":
         form = RegistrationForm(request.POST)
         
         if form.is_valid():
             user = form.save()
-            
             login(request, user)
             return redirect("home")
     else:
@@ -21,6 +26,9 @@ def registration(request):
     })
 
 def login_view(request):
+    if request.user.is_authenticated:
+        return redirect("home")
+    
     if request.method == "POST":
         form = LoginForm(request.POST)
         
@@ -36,12 +44,11 @@ def login_view(request):
 
             if user is not None:
                 login(request, user)
-
                 return redirect("home")
             else:
                 form.add_error(
                     None,
-                    "Неверный логин ли пароль"
+                    "Неверный логин или пароль"
                 )
     else:
         form = LoginForm()
@@ -49,9 +56,10 @@ def login_view(request):
     return render(request, 'accounts/login.html', {
         "form": form
     })
-    
+
+
+@login_required
+@require_POST
 def logout_view(request):
-
     logout(request)
-
     return redirect("home")
