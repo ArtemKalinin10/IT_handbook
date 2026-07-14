@@ -11,51 +11,46 @@ def registration(request):
     if request.user.is_authenticated:
         return redirect("home")
     
-    if request.method == "POST":
-        form = RegistrationForm(request.POST)
-        
-        if form.is_valid():
-            user = form.save()
-            login(request, user)
-            return redirect("home")
-    else:
-        form = RegistrationForm()
+    if request.method != "POST":
+        return render(request, 'accounts/registration.html', {
+            "form": RegistrationForm()
+        })
     
-    return render(request, 'accounts/registration.html', {
-        "form": form
-    })
+    form = RegistrationForm(request.POST)
+
+    if not form.is_valid():
+        return render(request, 'accounts/registration.html', {
+            "form": form
+        })
+
+    user = form.save()
+    login(request, user)
+    return redirect("home")
+
 
 def login_view(request):
     if request.user.is_authenticated:
         return redirect("home")
-    
-    if request.method == "POST":
-        form = LoginForm(request.POST)
-        
-        if form.is_valid():
-            username_email = form.cleaned_data["username_email"]
-            password = form.cleaned_data["password"]
-            
-            user = authenticate(
-                request,
-                username=username_email,
-                password=password
-            )
 
-            if user is not None:
-                login(request, user)
-                return redirect("home")
-            else:
-                form.add_error(
-                    None,
-                    "Неверный логин или пароль"
-                )
-    else:
-        form = LoginForm()
-        
-    return render(request, 'accounts/login.html', {
-        "form": form
-    })
+    if request.method != "POST":
+        return render(request, 'accounts/login.html', {"form": LoginForm()})
+
+    form = LoginForm(request.POST)
+
+    if not form.is_valid():
+        return render(request, 'accounts/login.html', {"form": form})
+
+    username_email = form.cleaned_data["username_email"]
+    password = form.cleaned_data["password"]
+    user = authenticate(request, username=username_email, password=password)
+
+    if user is None:
+        form.add_error(None, "Неверный логин или пароль")
+        return render(request, 'accounts/login.html', {"form": form})
+
+    login(request, user)
+    return redirect("home")
+
 
 
 @login_required

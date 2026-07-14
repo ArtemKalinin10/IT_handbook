@@ -23,10 +23,11 @@
       <span class="username">
         {{ request.user.username }}
       </span>
-
-      <a href="{% url 'logout' %}" class="btn danger">
-        Выйти
-      </a>
+      
+      <form action="{% url 'logout' %}" method="POST">
+        {% csrf_token %}
+        <button type="submit" class="btn danger">Выйти</button>
+      </form>
 
     {% else %}
 
