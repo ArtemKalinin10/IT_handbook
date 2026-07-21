@@ -1,89 +1,68 @@
 {% load static %}
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ru">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>{{ course.title }}</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{ course.title }}</title>
 
-  <link rel="stylesheet" href="{% static 'education/css/course.css' %}">
-</head>
-<body>
+    <link rel="stylesheet" href="{% static 'education/css/course.css' %}" />
+  </head>
+  <body>
+    {% include 'education/includes/header_template.html' %}
 
-{% include 'education/header_template.html' %}
+    <main class="container">
+      <section class="course-header">
+        <h1>{{ course.title }}</h1>
+        <p>{{ course.description }}</p>
+      </section>
 
-<main class="container">
+      <section class="modules">
+        {% for module in course.modules.all %}
+          <div class="module-card">
+            <div class="module-title">{{ module.order }}. {{ module.title }}</div>
+            <div class="lessons">
+              {% for lesson in module.lessons.all %}
+                <a
+                  href="{% url 'education:lesson_detail' course.slug lesson.slug %}"
+                  class="lesson-item"
+                >
+                  <div class="lesson-left">
+                    <span class="lesson-number">
+                      {{ module.order }}.{{ lesson.order }}.
+                    </span>
 
-  <section class="course-header">
-    <h1>{{ course.title }}</h1>
-    <p>{{ course.description }}</p>
-  </section>
+                    <span class="lesson-title"> {{ lesson.title }} </span>
+                  </div>
 
-  <section class="modules">
+                  <div class="lesson-progress">
+                    {% if lesson.total_tasks %}
+                      <span
+                        class="progress-circle"
+                        style="--progress: {{ lesson.progress_percent }}%;"
+                        aria-label="Прогресс урока"
+                      >
+                        <span class="progress-circle-inner"></span>
+                      </span>
 
-    {% for module in course.modules.all %}
-      <div class="module-card">
+                      <span class="progress-count">
+                        {{ lesson.completed_tasks }}/{{ lesson.total_tasks }}
+                        выполнено
+                      </span>
 
-        <div class="module-title">
-          {{ module.order }}. {{ module.title }}
-        </div>
-
-        <div class="lessons">
-
-          {% for lesson in module.lessons.all %}
-            <a
-              href="{% url 'education:lesson_detail' course.slug lesson.slug %}"
-              class="lesson-item"
-            >
-
-              <div class="lesson-left">
-
-                <span class="lesson-number">
-                  {{ module.order }}.{{ lesson.order }}.
-                </span>
-
-                <span class="lesson-title">
-                  {{ lesson.title }}
-                </span>
-
-              </div>
-
-              <div class="lesson-progress">
-                {% if lesson.total_tasks %}
-                  <span
-                    class="progress-circle"
-                    style="--progress: {{ lesson.progress_percent }}%;"
-                    aria-label="Прогресс урока"
-                  >
-                    <span class="progress-circle-inner"></span>
-                  </span>
-
-                  <span class="progress-count">
-                    {{ lesson.completed_tasks }}/{{ lesson.total_tasks }} выполнено
-                  </span>
-                  
-                {% endif %}
-
-              </div>
-
-            </a>
-          {% empty %}
-            <div class="empty">
-              Нет уроков
+                    {% endif %}
+                  </div>
+                </a>
+              {% empty %}
+                <div class="empty">Нет уроков</div>
+              {% endfor %}
             </div>
-          {% endfor %}
-
-        </div>
-
-      </div>
-    {% empty %}
-      <p>Модулей пока нет</p>
-    {% endfor %}
-
-  </section>
-
-</main>
-
-</body>
+          </div>
+        {% empty %}
+          <p>Модулей пока нет</p>
+        {% endfor %}
+      </section>
+    </main>
+  </body>
 </html>

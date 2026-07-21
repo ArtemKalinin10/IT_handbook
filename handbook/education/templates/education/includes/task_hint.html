@@ -1,0 +1,26 @@
+<details class="content-block hint-block">
+  <summary>{{ block.hint }}</summary>
+
+  <div class="hint-content">
+    {% for hint_block in block.hint.blocks.all %}
+      {% if hint_block.type == "text" %}
+        <div class="hint-text-block">
+          {{ hint_block.content|linebreaks }}
+        </div>
+      {% endif %}
+      {% if hint_block.type == "code" %}
+        {% include 'education/includes/task_code.html' with block=hint_block %}
+      {% endif %}
+      {% if hint_block.type == "image" %}
+        <div class="hint-image-block">
+          <img src="{{ hint_block.content }}" alt="Hint image" />
+        </div>
+      {% endif %}
+      {% if hint_block.type == "note" %}
+        <div class="hint-note-block">
+          {{ hint_block.content|linebreaks }}
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+</details>

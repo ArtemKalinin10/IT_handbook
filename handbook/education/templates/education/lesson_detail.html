@@ -1,162 +1,130 @@
 {% load static %}
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ru">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{ lesson.title }}</title>
+    <script src="{% static 'education/js/code_copy.js' %}" defer></script>
 
-  <title>{{ lesson.title }}</title>
+    <link rel="stylesheet" href="{% static 'education/css/lesson.css' %}" />
+  </head>
+  <body>
+    {% include 'education/includes/header_template.html' %}
 
-  <script src="{% static 'education/js/code_copy.js' %}" defer></script>
-  <link rel="stylesheet" href="{% static 'education/css/lesson.css' %}">
-</head>
-<body>
+    <input type="checkbox" id="sidebar-toggle" hidden />
 
-{% include 'education/header_template.html' %}
+    <main class="lesson-layout">
+      <aside class="sidebar">
+        <div class="sidebar-course">{{ lesson.module.course.title }}</div>
 
-<input type="checkbox" id="sidebar-toggle" hidden>
+        {% for module in lesson.module.course.modules.all %}
+          <div class="sidebar-module">
+            <div class="sidebar-module-title">
+              {{ module.order }}. {{ module.title }}
+            </div>
+            <div class="sidebar-lessons">
+              {% for lesson_item in module.lessons.all %}
+                <a
+                  href="{% url 'education:lesson_detail' lesson.module.course.slug lesson_item.slug %}"
+                  class="sidebar-lesson {% if lesson_item.slug == lesson.slug %}active{% endif %}"
+                >
+                  <span class="sidebar-lesson-text">
+                    {{ module.order }}.{{ lesson_item.order }} {{ lesson_item.title }}
+                  </span>
 
-<main class="lesson-layout">
-
-  <aside class="sidebar">
-
-    <div class="sidebar-course">
-      {{ lesson.module.course.title }}
-    </div>
-
-    {% for module in lesson.module.course.modules.all %}
-
-      <div class="sidebar-module">
-
-        <div class="sidebar-module-title">
-          {{ module.order }}. {{ module.title }}
+                  {% if lesson_item.total_tasks %}
+                    <span
+                      class="progress-circle sidebar-progress-circle"
+                      style="--progress: {{ lesson_item.progress_percent }}%;"
+                      aria-label="Прогресс урока"
+                    >
+                      <span class="progress-circle-inner"></span>
+                    </span>
+                  {% endif %}
+                </a>
+              {% endfor %}
+            </div>
+          </div>
+        {% endfor %}
+      </aside>
+      <section class="lesson-content">
+        <div class="lesson-topbar">
+          <label for="sidebar-toggle" class="sidebar-open">
+            ☰ Содержание
+          </label>
         </div>
 
-        <div class="sidebar-lessons">
-
-          {% for lesson_item in module.lessons.all %}
-
-            <a href="{% url 'education:lesson_detail' lesson.module.course.slug lesson_item.slug %}" 
-               class="sidebar-lesson {% if lesson_item.slug == lesson.slug %}active{% endif %}">
-              <span class="sidebar-lesson-text">
-                {{ module.order }}.{{ lesson_item.order }}
-                {{ lesson_item.title }}
+        <div class="lesson-header">
+          <div class="breadcrumbs">
+            {{ lesson.module.course.title }} / {{ lesson.module.title }} / {{ lesson.title }}
+          </div>
+          <h1>
+            {{ lesson.module.order }}.{{ lesson.order }} {{ lesson.title }}
+          </h1>
+          <div class="lesson-progress-meta">
+            {% if lesson.total_tasks %}
+              <span
+                class="progress-circle"
+                style="--progress: {{ lesson.progress_percent }}%;"
+                aria-label="Прогресс урока"
+              >
+                <span class="progress-circle-inner"></span>
               </span>
 
-              {% if lesson_item.total_tasks %}
-                <span
-                  class="progress-circle sidebar-progress-circle"
-                  style="--progress: {{ lesson_item.progress_percent }}%;"
-                  aria-label="Прогресс урока"
-                >
-                  <span class="progress-circle-inner"></span>
-                </span>
-              {% endif %}
-            </a>
-
-          {% endfor %}
-
+              <span class="lesson-progress-text">
+                {{ lesson.completed_tasks }}/{{ lesson.total_tasks }} выполнено
+              </span>
+            {% endif %}
+          </div>
         </div>
+        <div class="content-blocks">
+          {% for block in lesson.blocks.all %}
+            {% if block.type == "text" %}
+              <div class="content-block text-block">
+                {{ block.content|linebreaks }}
+              </div>
+            {% endif %}
+            {% if block.type == "code" %}
+              <div class="content-block code-block copyable-code-block">
+                <div class="code-header">
+                  <button type="button" class="copy-btn" onclick="copyCode(this)">
+                    <span class="copy-btn-text">Скопировать код</span>
+                    <span class="copy-btn-icon" aria-hidden="true"></span>
+                  </button>
+                </div>
+                <pre><code>{{ block.content|escape }}</code></pre>
+              </div>
+            {% endif %}
+            {% if block.type == "note" %}
+              <div class="content-block note-block">
+                <div class="note-title">💡 Примечание</div>
 
-      </div>
-
-    {% endfor %}
-
-  </aside>
-
-  <section class="lesson-content">
-
-    <div class="lesson-topbar">
-      <label for="sidebar-toggle" class="sidebar-open">
-        ☰ Содержание
-      </label>
-    </div>
-
-    <div class="lesson-header">
-
-      <div class="breadcrumbs">
-        {{ lesson.module.course.title }} / {{ lesson.module.title }} / {{ lesson.title }}
-      </div>
-
-      <h1>{{ lesson.module.order }}.{{ lesson.order }} {{ lesson.title }}</h1>
-
-      <div class="lesson-progress-meta">
-        {% if lesson.total_tasks %}
-          <span
-            class="progress-circle"
-            style="--progress: {{ lesson.progress_percent }}%;"
-            aria-label="Прогресс урока">
-            <span class="progress-circle-inner"></span>
-          </span>
-
-          <span class="lesson-progress-text">
-            {{ lesson.completed_tasks }}/{{ lesson.total_tasks }} выполнено
-          </span>
-        {% endif %}
-      </div>
-
-    </div>
-    
-    <div class="content-blocks">
-
-      {% for block in lesson.blocks.all %}
-
-        {% if block.type == "text" %}
-          <div class="content-block text-block">
-            {{ block.content|linebreaks }}
-          </div>
-        {% endif %}
-
-        {% if block.type == "code" %}
-          <div class="content-block code-block copyable-code-block">
-            <div class="code-header">
-              <button type="button" class="copy-btn" onclick="copyCode(this)">
-                <span class="copy-btn-text">Скопировать код</span>
-                <span class="copy-btn-icon" aria-hidden="true"></span>
-              </button>
-            </div>
-            <pre><code>{{ block.content|escape }}</code></pre>
-          </div>
-        {% endif %}
-
-        {% if block.type == "note" %}
-          <div class="content-block note-block">
-
-            <div class="note-title">
-              💡 Примечание
-            </div>
-
-            <div class="note-content">
-              {{ block.content|linebreaks }}
-            </div>
-
-          </div>
-        {% endif %}
-
-        {% if block.type == "image" %}
-          <div class="content-block image-block">
-            <img src="{{ block.content }}" alt="Lesson image">
-          </div>
-        {% endif %}
-
-      {% endfor %}
-
-      {% with lesson.tasks.all|first as first_task %}
-        {% if first_task %}
-          <div class="lesson-footer">
-            <a href="{% url 'education:task_detail' lesson.module.course.slug lesson.slug first_task.slug %}" target="_blank" class="solve-btn">
-              Решить задачи
-            </a>
-          </div>
-        {% endif %}
-      {% endwith %}
-
-    </div>
-
-  </section>
-
-</main>
-
-</body>
+                <div class="note-content">{{ block.content|linebreaks }}</div>
+              </div>
+            {% endif %}
+            {% if block.type == "image" %}
+              <div class="content-block image-block">
+                <img src="{{ block.content }}" alt="Lesson image" />
+              </div>
+            {% endif %}
+          {% endfor %}
+          {% with lesson.tasks.all|first as first_task %}
+            {% if first_task %}
+              <div class="lesson-footer">
+                <a
+                  href="{% url 'education:task_detail' lesson.module.course.slug lesson.slug first_task.slug %}"
+                  target="_blank"
+                  class="solve-btn"
+                >
+                  Решить задачи
+                </a>
+              </div>
+            {% endif %}
+          {% endwith %}
+        </div>
+      </section>
+    </main>
+  </body>
 </html>

@@ -1,263 +1,198 @@
 {% load static %}
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ru">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Задача</title>
-  <script src="{% static 'education/js/code_copy.js' %}" defer></script>
-  <script src="{% static 'education/js/task.js' %}" defer></script>
-  <link rel="stylesheet" href="{% static 'education/css/task.css' %}">
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Задача</title>
+    <script src="{% static 'education/js/code_copy.js' %}" defer></script>
+    <script src="{% static 'education/js/task.js' %}" defer></script>
+    <link rel="stylesheet" href="{% static 'education/css/task.css' %}" />
+  </head>
+  <body>
+    <input type="checkbox" id="sidebar-toggle" hidden />
 
-  <input type="checkbox" id="sidebar-toggle" hidden>
-
-  <div class="task-layout">
-
-    <aside class="sidebar">
-
-      <div class="sidebar-header">
-        <label for="sidebar-toggle" class="close-btn">✕</label>
-        <h3>Задачи</h3>
-      </div>
-
-      <ul class="task-list">
-        {% for task_item in task.lesson.tasks.all %}
-          <li class="{% if task_item.slug == task.slug %}active{% endif %}">
-            <a href="{% if task_item.slug == task.slug %}#{% else %}{% url 'education:task_detail' task.lesson.module.course.slug task.lesson.slug task_item.slug %}{% endif %}">
-              {{ task_item.order }}. {{ task_item.title }}
-            </a>
-          </li>
-        {% endfor %}
-      </ul>
-
-    </aside>
-
-    <aside class="task-left">
-      <div class="task-panel">
-        <div class="left-panel-header">
-          <label for="sidebar-toggle" class="open-btn">☰ Задачи</label>
-
-          <div class="left-tabs" role="tablist" aria-label="Навигация по задаче">
-            <button type="button" class="left-tab active" data-tab-target="description-panel" aria-selected="true">
-              Описание
-            </button>
-            <button type="button" class="left-tab" data-tab-target="solutions-panel" aria-selected="false">
-              Решения
-            </button>
-          </div>
+    <div class="task-layout">
+      <aside class="sidebar">
+        <div class="sidebar-header">
+          <label for="sidebar-toggle" class="close-btn">✕</label>
+          <h3>Задачи</h3>
         </div>
 
-        <section class="left-tab-panel active" id="description-panel">
-          <div class="task-title">
-            {{ task.order }}. {{ task.title }}
-          </div>
-
-          <div class="task-meta-card">
-            <div class="task-meta-item">
-              <span class="task-meta-label">Ограничение времени</span>
-              <span class="task-meta-value">{{ task.execution_time_limit }} сек</span>
-            </div>
-            <div class="task-meta-item">
-              <span class="task-meta-label">Ограничение памяти</span>
-              <span class="task-meta-value">{{ task.size_limit }} MB</span>
-            </div>
-          </div>
-
-          {% for block in task.blocks.all %}
-
-            {% if block.type == "text" %}
-              <div class="task-description">
-                {{ block.content|linebreaks }}
-              </div>
-            {% endif %}
-
-            {% if block.type == "code" %}
-              <div class="task-code-block copyable-code-block">
-
-                <div class="code-header">
-                  <button type="button" class="copy-btn" onclick="copyCode(this)">
-                    <span class="copy-btn-text">Скопировать код</span>
-                    <span class="copy-btn-icon" aria-hidden="true"></span>
-                  </button>
-                </div>
-
-                <pre><code>{{ block.content|escape }}</code></pre>
-
-              </div>
-            {% endif %}
-
-            {% if block.type == "image" %}
-              <div class="content-block image-block">
-                <img src="{{ block.content }}" alt="Task image">
-              </div>
-            {% endif %}
-
-            {% if block.type == "hint" and block.hint %}
-              <details class="content-block hint-block">
-
-                <summary>
-                  {{ block.hint }}
-                </summary>
-
-                <div class="hint-content">
-
-                  {% for hint_block in block.hint.blocks.all %}
-
-                    {% if hint_block.type == "text" %}
-                      <div class="hint-text-block">
-                        {{ hint_block.content|linebreaks }}
-                      </div>
-                    {% endif %}
-
-                    {% if hint_block.type == "code" %}
-                      <div class="hint-code-block copyable-code-block">
-                        <div class="code-header">
-                          <button type="button" class="copy-btn" onclick="copyCode(this)">
-                            <span class="copy-btn-text">Скопировать код</span>
-                            <span class="copy-btn-icon" aria-hidden="true"></span>
-                          </button>
-                        </div>
-                        <pre><code>{{ hint_block.content|escape }}</code></pre>
-                      </div>
-                    {% endif %}
-
-                    {% if hint_block.type == "image" %}
-                      <div class="hint-image-block">
-                        <img src="{{ hint_block.content }}" alt="Hint image">
-                      </div>
-                    {% endif %}
-
-                    {% if hint_block.type == "note" %}
-                      <div class="hint-note-block">
-                        {{ hint_block.content|linebreaks }}
-                      </div>
-                    {% endif %}
-
-                  {% endfor %}
-
-                </div>
-
-              </details>
-            {% endif %}
-
-          {% endfor %}
-        </section>
-
-      <section class="left-tab-panel" id="solutions-panel">
-
-        <div class="solutions-table">
-
-          <div class="solutions-head">
-            <div>Время отправки</div>
-            <div>Вердикт</div>
-          </div>
-
-          {% for submission in submissions %}
-            <div class="solution-row">
-              <div class="solution-time">
-                {{ submission.created_at|date:"d.m.y H:i" }}
-              </div>
-
-              <div
-                id="submission-{{ submission.id }}"
-                class="solution-verdict
-                  {% if submission.status == 'done' %}accepted
-                  {% elif submission.status == 'failed' %}wrong
-                  {% else %}pending{% endif %}"
+        <ul class="task-list">
+          {% for task_item in task.lesson.tasks.all %}
+            <li class="{% if task_item.slug == task.slug %}active{% endif %}">
+              <a
+                href="{% if task_item.slug == task.slug %}#{% else %}{% url 'education:task_detail' task.lesson.module.course.slug task.lesson.slug task_item.slug %}{% endif %}"
               >
-                {% if submission.status == 'done' %}
-                  Решение зачтено OK
-                {% elif submission.status == 'failed' %}
-                  Неправильный ответ WA
-                {% else %}
-                  Проверка PD
-                {% endif %}
+                {{ task_item.order }}. {{ task_item.title }}
+              </a>
+            </li>
+          {% endfor %}
+        </ul>
+      </aside>
+
+      <aside class="task-left">
+        <div class="task-panel">
+          <div class="left-panel-header">
+            <label for="sidebar-toggle" class="open-btn">☰ Задачи</label>
+
+            <div
+              class="left-tabs"
+              role="tablist"
+              aria-label="Навигация по задаче"
+            >
+              <button
+                type="button"
+                class="left-tab active"
+                data-tab-target="description-panel"
+                aria-selected="true"
+              >
+                Описание
+              </button>
+              <button
+                type="button"
+                class="left-tab"
+                data-tab-target="solutions-panel"
+                aria-selected="false"
+              >
+                Решения
+              </button>
+            </div>
+          </div>
+
+          <section class="left-tab-panel active" id="description-panel">
+            <div class="task-title">{{ task.order }}. {{ task.title }}</div>
+
+            <div class="task-meta-card">
+              <div class="task-meta-item">
+                <span class="task-meta-label">Ограничение времени</span>
+                <span class="task-meta-value"
+                  >{{ task.execution_time_limit }} сек</span
+                >
+              </div>
+              <div class="task-meta-item">
+                <span class="task-meta-label">Ограничение памяти</span>
+                <span class="task-meta-value">{{ task.size_limit }} MB</span>
               </div>
             </div>
-          {% endfor %}
+
+            {% for block in task.blocks.all %}
+              {% if block.type == "text" %}
+                <div class="task-description">{{ block.content|linebreaks }}</div>
+              {% endif %}
+
+              {% if block.type == "code" %}
+                {% include 'education/includes/task_code.html' %}
+              {% endif %}
+
+              {% if block.type == "image" %}
+                {% include 'education/includes/task_image.html' %}
+              {% endif %}
+
+              {% if block.type == "hint" and block.hint %}
+                {% include 'education/includes/task_hint.html' %}
+              {% endif %}
+            {% endfor %}
+          </section>
+
+          <section class="left-tab-panel" id="solutions-panel">
+            <div class="solutions-table">
+              <div class="solutions-head">
+                <div>Время отправки</div>
+                <div>Вердикт</div>
+              </div>
+
+              {% for submission in submissions %}
+                <div class="solution-row">
+                  <div class="solution-time">
+                    {{ submission.created_at|date:"d.m.y H:i" }}
+                  </div>
+
+                  <div
+                    id="submission-{{ submission.id }}"
+                    class="solution-verdict {% if submission.status == 'done' %}accepted {% elif submission.status == 'failed' %}wrong {% else %}pending{% endif %}"
+                  >
+                    {% if submission.status == 'done' %} Решение зачтено OK {% elif submission.status == 'failed' %} Неправильный ответ WA {% else %} Проверка PD {% endif %}
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+          </section>
         </div>
-      </section>
-      </div>
-    </aside>
+      </aside>
 
-    <main class="task-right">
+      <main class="task-right">
+        <div class="editor-topbar">
+          <div class="editor-info">
+            <div class="editor-title">Отправка решения</div>
 
-      <div class="editor-topbar">
-
-        <div class="editor-info">
-          <div class="editor-title">
-            Отправка решения
+            <div class="editor-subtitle">Python 3.11</div>
           </div>
 
-          <div class="editor-subtitle">
-            Python 3.11
-          </div>
+          <button type="submit" form="submission-form" class="submit-btn">
+            <span>Отправить</span>
+            <svg viewBox="0 0 24 24" fill="none">
+              <path
+                d="M5 12H19"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+              />
+              <path
+                d="M13 6L19 12L13 18"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+              />
+            </svg>
+          </button>
         </div>
 
-        <button type="submit" form="submission-form" class="submit-btn">
-          <span>Отправить</span>
-          <svg viewBox="0 0 24 24" fill="none">
-            <path d="M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-            <path d="M13 6L19 12L13 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-          </svg>
-        </button>
+        <form
+          id="submission-form"
+          method="post"
+          class="submission-form"
+          action="{% url 'education:send_submission' task.lesson.module.course.slug task.lesson.slug task.slug %}"
+        >
+          {% csrf_token %}
 
-      </div>
+          <div class="editor-wrapper">
+            <div class="editor-label">main.py</div>
 
-      <form
-        id="submission-form"
-        method="post"
-        class="submission-form"
-        action="{% url 'education:send_submission' task.lesson.module.course.slug task.lesson.slug task.slug %}"
-      >
-        {% csrf_token %}
-
-        <div class="editor-wrapper">
-
-          <div class="editor-label">
-            main.py
+            {{ form.code }}
           </div>
-
-          {{ form.code }}
-
-        </div>
-      </form>
-
-    </main>
-
-  </div>
+        </form>
+      </main>
+    </div>
     <script>
       document.addEventListener("DOMContentLoaded", () => {
+        const socket = new WebSocket(
+          `ws://${window.location.host}/ws/task/{{ task.id }}/`,
+        );
 
-          const socket = new WebSocket(
-              `ws://${window.location.host}/ws/task/{{ task.id }}/`
+        socket.onmessage = function (event) {
+          const data = JSON.parse(event.data);
+
+          const el = document.getElementById(
+            `submission-${data.submission_id}`,
           );
 
-          socket.onmessage = function(event) {
-              const data = JSON.parse(event.data);
+          if (el) {
+            el.classList.remove("pending", "accepted", "wrong");
 
-              const el = document.getElementById(
-                  `submission-${data.submission_id}`
-              );
+            if (data.status === "done") {
+              el.classList.add("accepted");
+              el.innerText = "Решение зачтено OK";
+            }
 
-              if (el) {
-                  el.classList.remove("pending", "accepted", "wrong");
-
-                  if (data.status === "done") {
-                      el.classList.add("accepted");
-                      el.innerText = "Решение зачтено OK";
-                  }
-
-                  if (data.status === "failed") {
-                      el.classList.add("wrong");
-                      el.innerText = "Неправильный ответ WA";
-                  }
-              }
-          };
-
+            if (data.status === "failed") {
+              el.classList.add("wrong");
+              el.innerText = "Неправильный ответ WA";
+            }
+          }
+        };
       });
     </script>
-</body>
+  </body>
 </html>
