@@ -7,9 +7,10 @@
     <title>Задача</title>
     <script src="{% static 'education/js/code_copy.js' %}" defer></script>
     <script src="{% static 'education/js/task.js' %}" defer></script>
+    <script src="{% static 'education/js/websocket.js' %}" defer></script>
     <link rel="stylesheet" href="{% static 'education/css/task.css' %}" />
   </head>
-  <body>
+  <body data-task-id="{{ task.id }}">
     <input type="checkbox" id="sidebar-toggle" hidden />
 
     <div class="task-layout">
@@ -165,34 +166,5 @@
         </form>
       </main>
     </div>
-    <script>
-      document.addEventListener("DOMContentLoaded", () => {
-        const socket = new WebSocket(
-          `ws://${window.location.host}/ws/task/{{ task.id }}/`,
-        );
-
-        socket.onmessage = function (event) {
-          const data = JSON.parse(event.data);
-
-          const el = document.getElementById(
-            `submission-${data.submission_id}`,
-          );
-
-          if (el) {
-            el.classList.remove("pending", "accepted", "wrong");
-
-            if (data.status === "done") {
-              el.classList.add("accepted");
-              el.innerText = "Решение зачтено OK";
-            }
-
-            if (data.status === "failed") {
-              el.classList.add("wrong");
-              el.innerText = "Неправильный ответ WA";
-            }
-          }
-        };
-      });
-    </script>
   </body>
 </html>
